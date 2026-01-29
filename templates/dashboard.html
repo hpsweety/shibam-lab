@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12">
+        <div
+            class="p-4 bg-white rounded-4 shadow-sm border-start border-4 border-roasted d-flex align-items-center justify-content-between">
+            <div>
+                <h3 class="fw-bold mb-1" style="color: var(--espresso);">{{ current_user.full_name }}</h3>
+                <p class="text-muted small mb-0">System Authority: <span
+                        class="badge border text-dark fw-normal rounded-pill bg-light">{{ current_user.role }}</span> |
+                    <span>Date: 2026-01-29</span>
+                </p>
+            </div>
+            <div class="text-end">
+                <span
+                    class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">LAB
+                    NETWORK ACTIVE</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Active Tasks for Cuppers -->
+    {% if current_user.role in ['Admin', 'Cupper'] %}
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 30px;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0">Active Cupping Tasks</h4>
+                <a href="#" class="text-decoration-none text-latte small fw-bold">View Protocol <i
+                        class="bi bi-arrow-right"></i></a>
+            </div>
+
+            {% if assigned_samples %}
+            <div class="row g-3">
+                {% for ss in assigned_samples %}
+                <div class="col-md-6">
+                    <div
+                        class="p-4 rounded-4 border border-light-subtle bg-light bg-opacity-25 hover-card {% if ss.assigned_cupper_id and ss.assigned_cupper_id != current_user.id %}opacity-50{% endif %}">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-white shadow-sm px-3 py-2 rounded-3 me-3 text-muted small border">CODE</div>
+                            <div>
+                                <h5 class="fw-bold mb-0 text-dark">{{ ss.blind_code }}</h5>
+                                <small class="text-muted">{{ ss.cupping_session.name }}</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {% if ss.assigned_cupper_id %}
+                            {% if ss.assigned_cupper_id == current_user.id %}
+                            <span class="badge bg-primary-subtle text-primary border rounded-pill px-3">Assigned to
+                                You</span>
+                            {% else %}
+                            <span class="badge bg-secondary-subtle text-secondary border rounded-pill px-3">Cupper: {{
+                                ss.assigned_cupper.full_name }}</span>
+                            {% endif %}
+                            {% else %}
+                            <span class="badge bg-light text-muted border rounded-pill px-3">Open for All</span>
+                            {% endif %}
+                        </div>
+
+                        <p class="small text-muted mb-4">SCA Sensory Protocol evaluation protocol active for this
+                            session.</p>
+                        {% if not ss.assigned_cupper_id or ss.assigned_cupper_id == current_user.id or current_user.role
+                        == 'Admin' %}
+                        <a href="{{ url_for('cupping', ss_id=ss.id) }}" class="btn btn-coffee w-100 rounded-pill">Start
+                            Sensory Analysis</a>
+                        {% else %}
+                        <button class="btn btn-secondary w-100 rounded-pill" disabled>Restricted Access</button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">No active sensory evaluation sessions assigned for this timeline.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Stats / Info Column -->
+    <div class="col-lg-4">
+        <div class="card border-0 bg-white shadow-sm p-4 mb-4" style="border-radius: 30px;">
+            <h5 class="fw-bold mb-4">Quick Insights</h5>
+            <div class="mb-4 d-flex align-items-center">
+                <div>
+                    <h6 class="mb-0 fw-bold">Protocol Accuracy</h6>
+                    <div class="progress mt-1" style="height: 6px; width: 100px;">
+                        <div class="progress-bar bg-success" style="width: 98%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <div>
+                    <h6 class="mb-0 fw-bold">Active Sessions</h6>
+                    <small class="text-muted">Running: {{ assigned_samples|length }} Tasks</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 text-white p-4" style="border-radius: 30px; background: var(--latte);">
+            <h5 class="fw-bold mb-3">Lab Daily Note:</h5>
+            <p class="small opacity-75">Cleanse palate with sparkling water between samples. Calibrate your sensory
+                profile with the master coach before starting.</p>
+            <div class="text-end mt-2">
+                <span class="small font-monospace opacity-50">#QualityFirst</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-silk-cream {
+        background-color: var(--silk-cream);
+    }
+
+    .text-roasted {
+        color: var(--roasted);
+    }
+
+    .hover-card {
+        transition: 0.3s ease;
+        border: 1px solid transparent !important;
+    }
+
+    .hover-card:hover {
+        border-color: var(--gold-accent) !important;
+        background-color: var(--silk-cream) !important;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}

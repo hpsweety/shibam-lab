@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-5 border-0 shadow-lg" style="border-radius: 35px;">
+            <div class="mb-4">
+                <h3 class="fw-bold" style="color: var(--roasted);">Update Sample</h3>
+                <p class="text-muted">Modify recording for <strong>{{ s.sample_id }}</strong></p>
+            </div>
+
+            <form method="POST">
+                <div class="form-floating mb-3">
+                    <input type="text" name="coffee_type" class="form-control" id="fType" value="{{ s.coffee_type }}"
+                        required>
+                    <label for="fType">Coffee Type</label>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" name="origin" class="form-control" id="fOri" value="{{ s.origin }}"
+                                required>
+                            <label for="fOri">Origin</label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" name="region" class="form-control" id="fReg" value="{{ s.region }}">
+                            <label for="fReg">Region</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" name="farm" class="form-control" id="fFarm" value="{{ s.farm }}">
+                    <label for="fFarm">Farm / Source</label>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <select name="process" class="form-select" id="fProc">
+                                <option {% if s.process=='Natural' %}selected{% endif %}>Natural</option>
+                                <option {% if s.process=='Washed' %}selected{% endif %}>Washed</option>
+                                <option {% if s.process=='Honey' %}selected{% endif %}>Honey</option>
+                                <option {% if s.process=='Anaerobic' %}selected{% endif %}>Anaerobic</option>
+                                <option {% if s.process=='Other' %}selected{% endif %}>Other</option>
+                            </select>
+                            <label for="fProc">Process</label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="number" name="harvest_year" class="form-control" id="fYear"
+                                value="{{ s.harvest_year }}">
+                            <label for="fYear">Harvest Year</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" name="ico_number" class="form-control" id="fIco"
+                                value="{{ s.ico_number }}">
+                            <label for="fIco">ICO Number</label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" name="certifications" class="form-control" id="fCert"
+                                value="{{ s.certifications }}">
+                            <label for="fCert">Certifications</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 pt-3">
+                    <button type="submit" class="btn btn-coffee px-5 rounded-pill shadow">Save Changes</button>
+                    <a href="{{ url_for('admin_samples') }}" class="btn btn-light px-5 rounded-pill">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

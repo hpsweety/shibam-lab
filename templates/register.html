@@ -1,0 +1,132 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-11 col-xl-10">
+        <div class="card overflow-hidden shadow-lg border-0" style="border-radius: 40px;">
+            <div class="row g-0">
+                <!-- Visual Side -->
+                <div class="col-lg-5 d-none d-lg-block"
+                    style="background: url('https://images.unsplash.com/photo-1511228539447-9370bb0ee50b?auto=format&fit=crop&w=800&q=80') center/cover;">
+                    <div class="h-100 w-100 p-5 d-flex flex-column justify-content-center text-white"
+                        style="background: linear-gradient(135deg, rgba(26,15,10,0.95), rgba(78,52,46,0.6));">
+                        <h1 class="display-4 fw-bold mb-3">Join our Lab.</h1>
+                        <p class="lead opacity-75">Shibam Al-Maaref Institute. Become part of the elite sensory team.
+                        </p>
+
+                        <div class="mt-5 border-start border-4 border-gold ps-4 py-2">
+                            <h6 class="fw-bold text-gold">SCQA Protocol v2.6</h6>
+                            <p class="small opacity-50 mb-0">Professional accounts require administrative validation
+                                after successful registration.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registration Form -->
+                <div class="col-lg-7 p-5 bg-white">
+                    <div class="mb-5">
+                        <h2 class="fw-bold" style="color: var(--roasted);">{{ t.register }}</h2>
+                        <p class="text-muted small">Create your professional profile on Shibam Labs</p>
+                    </div>
+
+                    <form method="POST">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <div class="btn-group w-100 mb-4 shadow-sm rounded-pill overflow-hidden border"
+                                    role="group">
+                                    <input type="radio" class="btn-check" name="role" id="roleCupperReg" value="Cupper"
+                                        checked onclick="toggleAdminKey(false)">
+                                    <label class="btn btn-outline-dark border-0 py-3" for="roleCupperReg">SENSORY
+                                        CUPPER</label>
+
+                                    <input type="radio" class="btn-check" name="role" id="roleRMReg"
+                                        value="RoastManager" onclick="toggleAdminKey(false)">
+                                    <label class="btn btn-outline-dark border-0 py-3" for="roleRMReg">ROAST
+                                        MASTER</label>
+
+                                    <input type="radio" class="btn-check" name="role" id="roleAdminReg" value="Admin"
+                                        onclick="toggleAdminKey(true)">
+                                    <label class="btn btn-outline-dark border-0 py-3" for="roleAdminReg">ADMIN</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="full_name" class="form-control bg-light border-0 rounded-4"
+                                        id="fName" placeholder="Full Name" required>
+                                    <label for="fName">{{ t.full_name }}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="username" class="form-control bg-light border-0 rounded-4"
+                                        id="uName" placeholder="Username" required>
+                                    <label for="uName">{{ t.username }}</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating mb-3">
+                                    <input type="email" name="email" class="form-control bg-light border-0 rounded-4"
+                                        id="eMail" placeholder="email@example.com" required>
+                                    <label for="eMail">{{ t.email }}</label>
+                                </div>
+                            </div>
+
+                            <!-- Admin Key Field (Hidden by default) -->
+                            <div class="col-12" id="adminKeySection" style="display: none;">
+                                <div class="form-floating mb-3">
+                                    <input type="password" name="secret_key"
+                                        class="form-control border-warning-subtle bg-warning bg-opacity-10 rounded-4"
+                                        id="aKey" placeholder="Admin Key">
+                                    <label for="aKey" class="text-dark fw-bold">SysAdmin Authorization Key</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="password" name="password"
+                                        class="form-control bg-light border-0 rounded-4" id="pw" placeholder="Password"
+                                        required>
+                                    <label for="pw">{{ t.password }}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-4">
+                                    <input type="password" name="confirm_password"
+                                        class="form-control bg-light border-0 rounded-4" id="cpw" placeholder="Confirm"
+                                        required>
+                                    <label for="cpw">{{ t.confirm_password }}</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-coffee w-100 py-3 shadow-lg rounded-pill fs-5">{{
+                                    t.register }}</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('admin_users') }}" class="text-decoration-none text-muted fw-bold small">←
+                            Cancel and Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleAdminKey(show) {
+        document.getElementById('adminKeySection').style.display = show ? 'block' : 'none';
+    }
+</script>
+<style>
+    .text-gold {
+        color: var(--gold-accent);
+    }
+
+    .border-gold {
+        border-color: var(--gold-accent) !important;
+    }
+</style>
+{% endblock %}

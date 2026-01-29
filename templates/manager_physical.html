@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold" style="color: var(--roasted);">{{ t.physical }}</h2>
+                <p class="text-muted">Protocol: SCA Standard G-100 | Sample Size: 350g</p>
+            </div>
+            <div class="text-end">
+                <span class="badge bg-white shadow-sm text-dark p-2 border">Physical Audit No: SHB-PHYS-{{ range(100,
+                    999)|random }}</span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Assessment Form -->
+            <div class="col-md-7">
+                <div class="card p-5 border-0 shadow-sm" style="border-radius: 30px;">
+                    <form method="POST">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted small">Sample Selection</label>
+                            <select name="sample_id" class="form-select border-0 bg-light p-3 rounded-4">
+                                {% for s in samples %}
+                                <option value="{{ s.id }}">{{ s.sample_id }} | {{ s.origin }} - {{ s.coffee_type }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="number" step="0.1" name="moisture"
+                                        class="form-control border-0 bg-light rounded-4" placeholder="10.5%" required>
+                                    <label>Water Activity (Moisture %)</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="number" step="1" name="density"
+                                        class="form-control border-0 bg-light rounded-4" placeholder="720" required>
+                                    <label>Density (g/Lit)</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <select name="bean_color" class="form-select border-0 bg-light rounded-4">
+                                        <option>Green-Blue</option>
+                                        <option selected>Green</option>
+                                        <option>Pale Green</option>
+                                        <option>Yellowish</option>
+                                        <option>Brownish</option>
+                                    </select>
+                                    <label>Bean Color (Raw)</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <select name="screen" class="form-select border-0 bg-light rounded-4">
+                                        <option>14</option>
+                                        <option>15</option>
+                                        <option>16</option>
+                                        <option>17</option>
+                                        <option selected>18 (Specialty)</option>
+                                    </select>
+                                    <label>Sieve Screen Match</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <select name="roast_level" class="form-select border-0 bg-light rounded-4">
+                                        <option>Light</option>
+                                        <option selected>Medium</option>
+                                        <option>Dark</option>
+                                    </select>
+                                    <label>Roast Degree</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-4 border rounded-4 bg-light bg-opacity-50">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-exclamation-triangle me-2"></i> Defect Count (SCA
+                                Method)</h6>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <label class="form-label small">Primary (Cat 1)</label>
+                                    <input type="number" name="cat1" class="form-control border-0 shadow-sm rounded-3"
+                                        value="0">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small">Secondary (Cat 2)</label>
+                                    <input type="number" name="cat2" class="form-control border-0 shadow-sm rounded-3"
+                                        value="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 mb-4">
+                            <label class="form-label fw-bold text-muted small">Quality Specialist Remarks</label>
+                            <textarea name="notes" class="form-control border-0 bg-light p-3 rounded-4" rows="3"
+                                placeholder="Describe appearance, smell, and uniformity..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-coffee w-100 py-3 rounded-pill shadow-lg mt-2">Certify &
+                            Save Assessment</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Visualization Side -->
+            <div class="col-md-5">
+                <div class="card border-0 bg-dark text-white p-4 h-100 d-flex flex-column justify-content-between"
+                    style="border-radius: 30px; background: linear-gradient(135deg, #1A0F0A 0%, #4E342E 100%);">
+                    <div>
+                        <h4 class="fw-bold text-gold mb-4">Technical Standards</h4>
+                        <div class="mb-4">
+                            <h6 class="fw-bold opacity-75">Moisture Guidance:</h6>
+                            <p class="small opacity-50">Specialty target: 10.0% - 12.0%. Values above 12.5% risk fungal
+                                growth. Values below 9% risk flavor loss.</p>
+                        </div>
+                        <div class="mb-4">
+                            <h6 class="fw-bold opacity-75">Density Impact:</h6>
+                            <p class="small opacity-50">Beans > 700g/L generally have richer acidity and complex sugar
+                                profiles due to high altitude cultivation.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white bg-opacity-10 p-3 rounded-4 mt-auto">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h6 class="mb-0">Quality Control Active</h6>
+                                <p class="small mb-0 opacity-50">Shibam International Lab Protocol 2026</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,190 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold" style="color: var(--roasted);">{{ t.sessions }} <span class="text-muted fw-light">| Cupping
+            Operations</span></h2>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Active Sessions Feed -->
+    <div class="col-lg-12">
+        <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 25px;">
+            <div class="p-4 bg-white border-bottom">
+                <h6 class="mb-0 fw-bold">Live Session Control Panel</h6>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-muted small">
+                        <tr>
+                            <th class="ps-4">Session Name</th>
+                            <th>Roast Target</th>
+                            <th>Current Status</th>
+                            <th>Samples Count</th>
+                            <th class="text-end pe-4">System Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sess in sessions %}
+                        <tr>
+                            <td class="ps-4">
+                                <h6 class="mb-0 fw-bold">{{ sess.name }}</h6>
+                                <small class="text-muted">Created: {{ sess.created_at.strftime('%Y/%m/%d') }}</small>
+                            </td>
+                            <td><span class="badge bg-light text-dark fw-normal border">{{ sess.roast_level }}</span>
+                            </td>
+                            <td>
+                                {% if sess.status == 'Open' %}
+                                <span class="badge bg-success shadow-sm px-3 py-2 rounded-pill"><i class="dot me-1"></i>
+                                    Live & Open</span>
+                                {% else %}
+                                <span class="badge bg-secondary shadow-sm px-3 py-2 rounded-pill">Closed /
+                                    Archived</span>
+                                {% endif %}
+                            </td>
+                            <td><span class="fw-bold text-latte">{{ sess.samples|length }}</span> Samples Linked</td>
+                            <td class="text-end pe-4">
+                                <a href="{{ url_for('toggle_session', id=sess.id) }}"
+                                    class="btn btn-sm px-3 {% if sess.status == 'Open' %}btn-outline-danger{% else %}btn-outline-success{% endif %} rounded-pill">
+                                    {% if sess.status == 'Open' %}Close Session{% else %}Open Session{% endif %}
+                                </a>
+                                <a href="{{ url_for('export_excel', session_id=sess.id) }}"
+                                    class="btn btn-sm btn-dark px-3 rounded-pill ms-2">
+                                    Report
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Management Tools Split -->
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 25px;">
+            <div class="d-flex align-items-center mb-4">
+                <h5 class="mb-0 fw-bold">Initialize New Session</h5>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="create_session" value="1">
+                <div class="form-floating mb-3">
+                    <input type="text" name="name" class="form-control" placeholder="Session Name" required>
+                    <label>Internal Session Name</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <select name="roast_level" class="form-select">
+                        <option>Light (Specialty @ 12.5% dev)</option>
+                        <option selected>Medium (Omni-roast)</option>
+                        <option>Dark (Espresso Profile)</option>
+                    </select>
+                    <label>Protocol Roast Level</label>
+                </div>
+                <button type="submit" class="btn btn-coffee w-100 py-3 rounded-pill shadow-sm">{{ t.save }}</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 25px;">
+            <div class="d-flex align-items-center mb-4">
+                <h5 class="mb-0 fw-bold">Blind Code Assignment</h5>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="link_sample" value="1">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted">Target Session</label>
+                        <select name="session_id" class="form-select rounded-pill">
+                            {% for s in sessions %}
+                            <option value="{{ s.id }}">{{ s.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted">Physical Sample</label>
+                        <select name="sample_id" class="form-select rounded-pill">
+                            {% for s in samples %}
+                            <option value="{{ s.id }}">{{ s.sample_id }} - {{ s.origin }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted">Assigned Cupper</label>
+                        <select name="assigned_cupper_id" class="form-select rounded-pill">
+                            <option value="">-- All Cuppers --</option>
+                            {% for u in users %}
+                            {% if u.role == 'Cupper' %}
+                            <option value="{{ u.id }}">{{ u.full_name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12 mt-4">
+                        <div class="form-floating">
+                            <input type="text" name="blind_code" class="form-control" placeholder="e.g. Sample #01"
+                                required>
+                            <label>Secure Blind Code (Visible to Cuppers)</label>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-dark w-100 py-3 mt-4 rounded-pill shadow-sm">Authorize & Bind
+                    Sample</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Master Audit Table -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 30px;">
+            <div class="p-4" style="background: linear-gradient(90deg, var(--espresso), var(--roasted)); color: white;">
+                <h5 class="mb-0"><i class="bi bi-shield-check me-2"></i> Quality Assurance: Master Evaluation Audit</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Blind Identity</th>
+                            <th>Cupper Profile</th>
+                            <th>Sensory Breakdown (A, F, AC, B, S, BK)</th>
+                            <th class="text-center">Defects</th>
+                            <th class="pe-4 text-center">Protocol Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for eval in all_evaluations %}
+                        <tr>
+                            <td class="ps-4"><span class="fw-bold" style="color: var(--latte);">{{
+                                    eval.session_sample.blind_code }}</span></td>
+                            <td>
+                                <div class="fw-bold">{{ eval.cupper.full_name }}</div><small class="text-muted">{{
+                                    eval.cupper.role }}</small>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <span class="badge bg-light text-dark">{{ eval.aroma }}</span>
+                                    <span class="badge bg-light text-dark">{{ eval.flavor }}</span>
+                                    <span class="badge bg-light text-dark">{{ eval.acidity }}</span>
+                                    <span class="badge bg-light text-dark">{{ eval.body }}</span>
+                                    <span class="badge bg-light text-dark">{{ eval.sweetness }}</span>
+                                    <span class="badge bg-light text-dark">{{ eval.balance }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center"><span class="text-danger fw-bold">-{{ eval.defects }}</span></td>
+                            <td class="pe-4 text-center">
+                                <div class="h5 mb-0 fw-bold border-start border-4 border-warning ps-3">
+                                    {{ eval.aroma + eval.flavor + eval.acidity + eval.body + eval.sweetness +
+                                    eval.balance + eval.clean_cup + eval.overall - eval.defects }}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

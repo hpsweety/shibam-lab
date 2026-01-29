@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">{{ t.manage_users if t.manage_users else 'User Management' }}</h2>
+    <a href="{{ url_for('register') }}" class="btn btn-coffee rounded-pill shadow-sm">
+        + {{ t.add_user if t.add_user else 'Add New User' }}
+    </a>
+</div>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-info rounded-4 border-0 shadow-sm mb-4">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="card border-0 shadow-sm" style="border-radius: 30px; overflow: hidden;">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="ps-4 py-3">{{ t.full_name }}</th>
+                    <th class="py-3">{{ t.username }}</th>
+                    <th class="py-3">{{ t.role }}</th>
+                    <th class="py-3 text-center">Status</th>
+                    <th class="pe-4 py-3 text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td class="ps-4">
+                        <div class="fw-bold">{{ user.full_name }}</div>
+                        <div class="small text-muted">{{ user.email }}</div>
+                    </td>
+                    <td><code>{{ user.username }}</code></td>
+                    <td>
+                        <span class="badge border text-dark fw-normal px-3 py-2 rounded-pill shadow-sm bg-white">
+                            {{ user.role }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        {% if user.is_active %}
+                        <span
+                            class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">Active</span>
+                        {% else %}
+                        <span
+                            class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">Deactivated</span>
+                        {% endif %}
+                    </td>
+                    <td class="pe-4 text-end">
+                        <div class="btn-group shadow-sm rounded-pill overflow-hidden">
+                            <a href="{{ url_for('toggle_user', id=user.id) }}"
+                                class="btn btn-sm btn-light border-end px-3" title="Toggle Active">
+                                Toggle
+                            </a>
+                            {% if user.id != current_user.id %}
+                            <a href="{{ url_for('delete_user', id=user.id) }}"
+                                class="btn btn-sm btn-white text-danger px-3"
+                                onclick="return confirm('Delete this user?')" title="Delete">
+                                Delete
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

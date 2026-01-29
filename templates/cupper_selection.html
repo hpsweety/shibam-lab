@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-6 text-center">
+        <h2 class="fw-bold mb-4" style="color: var(--espresso);">Identification Required</h2>
+        <p class="text-muted mb-5">Lab access granted. Please select your professional profile to continue.</p>
+
+        <div class="card p-5 border-0 shadow-lg" style="border-radius: 45px;">
+            <form method="POST">
+                <div class="row g-3">
+                    {% for c in cuppers %}
+                    <div class="col-12">
+                        <button type="submit" name="cupper_id" value="{{ c.id }}"
+                            class="btn btn-outline-coffee w-100 py-3 rounded-pill fs-5 fw-bold hover-lift">
+                            {{ c.full_name }}
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </form>
+            <div class="mt-4">
+                <a href="{{ url_for('welcome') }}" class="text-muted small text-decoration-none">← Back to Main Gate</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-outline-coffee {
+        color: var(--roasted);
+        border: 2px solid var(--roasted);
+    }
+
+    .btn-outline-coffee:hover {
+        background: var(--roasted);
+        color: white;
+    }
+
+    .hover-lift {
+        transition: transform 0.2s ease;
+    }
+
+    .hover-lift:hover {
+        transform: scale(1.02);
+    }
+</style>
+{% endblock %}

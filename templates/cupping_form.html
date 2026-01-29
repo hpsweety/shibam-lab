@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-11">
+        <!-- Sticky Header for Form -->
+        <div class="d-flex justify-content-between align-items-center mb-4 sticky-top p-3 bg-white bg-opacity-75 backdrop-blur rounded-4 shadow-sm"
+            style="top: 80px; z-index: 100;">
+            <div>
+                <h2 class="fw-bold mb-0">Sensory Analysis: <span class="text-latte">{{ ss.blind_code }}</span></h2>
+                <small class="text-muted">Protocol: SCA Specialty Coffee Cupping (Alpha VI)</small>
+            </div>
+            <button type="button" class="btn btn-outline-dark rounded-pill px-4" onclick="history.back()">Exit
+                Lab</button>
+        </div>
+
+        <form method="POST">
+            <div class="row g-4">
+                <!-- Left Control: Scales -->
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm p-4 pt-5 mb-4" style="border-radius: 30px;">
+                        {% set attributes = [
+                        ('aroma', 'Aroma (Fragrance)', 'Dry fragrance of coffee and wet aroma with water'),
+                        ('flavor', 'Flavor', 'The coffee’s principal character, mid-range notes'),
+                        ('acidity', 'Acidity', 'Brightness or briskness when the coffee is first tasted'),
+                        ('body', 'Body', 'Tactile feeling of the liquid in the mouth'),
+                        ('sweetness', 'Sweetness', 'Presence of pleasant sugar-like qualities'),
+                        ('balance', 'Balance', 'How all the above attributes work together'),
+                        ('overall', 'Overall', 'Subjective scoring of the coffee sample')
+                        ] %}
+
+                        {% for key, label, desc in attributes %}
+                        <div class="mb-5 row align-items-center">
+                            <div class="col-md-4">
+                                <h6 class="fw-bold mb-1">{{ label }}</h6>
+                                <p class="small text-muted mb-0 lh-sm">{{ desc }}</p>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="small fw-bold text-muted">6.0</span>
+                                    <input type="range" name="{{ key }}" class="form-range custom-range" min="6"
+                                        max="10" step="0.25" value="7.5"
+                                        oninput="this.nextElementSibling.innerText = this.value">
+                                    <span class="badge bg-roasted px-3 py-2 rounded-pill fs-6 display-val">7.5</span>
+                                </div>
+                                <div class="d-flex justify-content-between px-2 mt-1">
+                                    <span class="x-small text-muted">Good</span>
+                                    <span class="x-small text-muted">Very Good</span>
+                                    <span class="x-small text-muted">Excellent</span>
+                                    <span class="x-small text-muted">Outstanding</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Right Side: Logistics & Notes -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 30px;">
+                        <h5 class="fw-bold mb-4">Protocol Details</h5>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-muted">Clean Cup Analysis</label>
+                            <div class="d-flex gap-2">
+                                <input type="number" name="clean_cup"
+                                    class="form-control border-0 bg-light rounded-4 text-center" value="10" min="0"
+                                    max="10">
+                                <span class="text-muted small align-self-center">/ 10</span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-muted text-danger">Defect Deductions</label>
+                            <input type="number" name="defects"
+                                class="form-control border-0 bg-danger bg-opacity-10 text-danger rounded-4 text-center fw-bold"
+                                value="0">
+                            <p class="x-small text-muted mt-2">Deduct 2 points per defect found (Taint/Fault)</p>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-muted">Uniformity (Cups)</label>
+                            <input type="number" name="uniformity"
+                                class="form-control border-0 bg-light rounded-4 text-center" value="10" min="0"
+                                max="10">
+                            <p class="x-small text-muted mt-2">Score 2 points per uniform cup (Total 5 cups)</p>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 30px;">
+                        <h5 class="fw-bold mb-3">Sensory Notes</h5>
+                        <textarea name="notes" class="form-control border-0 bg-light p-3 rounded-4" rows="8"
+                            placeholder="Enter tasting notes: Chocolate, Citrus, Floral, Texture..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-coffee w-100 py-4 shadow-lg rounded-pill fs-5">Certified
+                        Submission</button>
+                    <p class="text-center mt-3 small text-muted">Once submitted, evaluation is data-locked.</p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .custom-range::-webkit-slider-runnable-track {
+        background: #eee;
+        height: 8px;
+        border-radius: 5px;
+    }
+
+    .custom-range::-webkit-slider-thumb {
+        background: var(--gold-accent);
+        border: 2px solid white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-top: -6px;
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(10px);
+    }
+
+    .x-small {
+        font-size: 0.75rem;
+    }
+
+    .bg-roasted {
+        background-color: var(--roasted);
+    }
+
+    .text-gold {
+        color: var(--gold-accent);
+    }
+</style>
+{% endblock %}
