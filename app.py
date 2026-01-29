@@ -9,9 +9,14 @@ import shutil
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SECRET_KEY'] = 'shibam-secret-key-123'
+# Critical for Sessions on Render
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'shibam-secret-key-123-hardcoded')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'shibam_db.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=7)
+app.config['SESSION_COOKIE_SECURE'] = True # Render uses HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 ADMIN_SECRET_KEY = "SHIBAM-KEY"
 
