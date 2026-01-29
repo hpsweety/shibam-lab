@@ -58,7 +58,10 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    try:
+        return User.query.get(int(user_id))
+    except (ValueError, TypeError):
+        return None
 
 # --- Utils ---
 def get_translations(lang):
@@ -197,12 +200,9 @@ def login():
                         flash('Your account is deactivated. Please contact Admin.')
                         return render_template('login.html', t=get_translations(session['lang']))
                     login_user(user, remember=True)
-                    flash('Login Successful! Redirecting...')
-                    return redirect(url_for('index'))
-                else:
-                    flash(f'Incorrect Password for user {username}')
-            else:
-                flash(f'User {username} not found in database') # Debug User Not Found
+                    # Redirect directly to specific dashboard to avoid loops
+                    return redirect(url_for('admin_sessions'))
+            flash('Invalid credentials for Admin.')
         else: # Handles RoastManager and other potential roles
             username = request.form.get('username')
             password = request.form.get('password')
