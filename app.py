@@ -535,8 +535,9 @@ def cupping(ss_id):
 def init_data():
     with app.app_context():
         db.create_all()
-        if not User.query.first():
-            # Only create the first admin if the database is brand new and empty
+        # ALWAYS ensure the default admin exists
+        admin_user = User.query.filter_by(username='admin').first()
+        if not admin_user:
             hashed = bcrypt.hashpw("admin123".encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             db.session.add(User(
                 username='admin', 
@@ -547,7 +548,7 @@ def init_data():
                 is_active=True
             ))
             db.session.commit()
-            print("INFO: Initial admin user created.")
+            print("INFO: Default admin user 'admin' created.")
 
 # Ensure DB and Admin exist on first run (works for both Local and Render)
 try:
