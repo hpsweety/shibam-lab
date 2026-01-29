@@ -50,12 +50,12 @@
                                 t.username }}</label>
                         </div>
 
-                        <!-- Admin Field Hidden -->
-                        <div id="adminKeyGroup" class="animate-quick scale-in" style="display: none !important;">
+                        <!-- Admin Field -->
+                        <div id="adminKeyGroup" class="animate-quick scale-in">
                             <div class="form-floating mb-3">
                                 <input type="password" name="secret_key"
                                     class="form-control border-warning bg-warning bg-opacity-10 rounded-4 px-4 shadow-sm"
-                                    id="kIn" placeholder="Key" value="SHIBAM-KEY">
+                                    id="kIn" placeholder="Key">
                                 <label for="kIn"
                                     class="{% if session.lang == 'ar' %}pe-4{% else %}ps-4{% endif %} text-dark fw-bold">{{
                                     t.admin_key }}</label>
