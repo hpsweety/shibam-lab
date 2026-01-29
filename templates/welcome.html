@@ -90,14 +90,33 @@
         }
     }
 
-    /* Responsive Adjustments */
+    /* Responsive Adjustments for Mobile */
     @media (max-width: 768px) {
         .display-3 {
-            font-size: 2.5rem;
+            font-size: 2rem !important;
+            /* Smaller title on mobile */
         }
 
         .welcome-card {
-            padding: 2.5rem !important;
+            padding: 2rem !important;
+            /* Reduce padding */
+            margin-bottom: 1rem;
+        }
+
+        .rounded-circle {
+            width: 160px !important;
+            /* Smaller logo */
+            height: 160px !important;
+        }
+
+        .p-4.rounded-circle {
+            padding: 1rem !important;
+            /* Smaller logo container */
+        }
+
+        .row.g-4 {
+            --bs-gutter-y: 1rem;
+            /* Smaller vertical gap between cards */
         }
     }
 </style>

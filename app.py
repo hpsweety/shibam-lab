@@ -14,8 +14,9 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'shibam-secret-key-123-h
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'shibam_db.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=7)
-app.config['SESSION_COOKIE_SECURE'] = True # Render uses HTTPS
-app.config['SESSION_COOKIE_HTTPONLY'] = True
+# Relaxing security for debugging login loop
+app.config['SESSION_COOKIE_SECURE'] = False 
+app.config['SESSION_COOKIE_HTTPONLY'] = False
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 ADMIN_SECRET_KEY = "SHIBAM-KEY"
