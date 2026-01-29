@@ -174,11 +174,9 @@ def login():
         elif role == 'Admin':
             username = request.form.get('username')
             password = request.form.get('password')
-            secret_key = request.form.get('secret_key')
-            
-            if secret_key != ADMIN_SECRET_KEY:
-                flash('Invalid Admin Secret Key!')
-                return render_template('login.html', t=get_translations(session['lang']))
+# Secret Key check removed for login convenience
+            # if secret_key != ADMIN_SECRET_KEY: ...
+
                 
             user = User.query.filter_by(username=username, role='Admin').first()
             if user:
@@ -236,9 +234,8 @@ def register():
             flash('Passwords do not match!')
             return render_template('register.html', t=get_translations(session['lang']))
 
-        if role == 'Admin' and secret_key != ADMIN_SECRET_KEY:
-            flash('Invalid Admin Secret Key for registration!')
-            return render_template('register.html', t=get_translations(session['lang']))
+# Secret key only reduced to warning or removed
+
 
         existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
         if existing_user:

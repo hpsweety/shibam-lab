@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center align-items-center px-2" style="min-height: 80vh;">
+    <div class="col-md-11 col-lg-9 col-xl-8">
+        <div class="card overflow-hidden shadow-lg border-0" style="border-radius: 45px;">
+            <div class="row g-0">
+                <!-- Branding Sidebar (Hidden on mobile) -->
+                <div class="col-md-5 d-none d-md-block staff-gradient-auth">
+                    <div
+                        class="h-100 w-100 d-flex flex-column justify-content-center align-items-center p-5 text-white text-center">
+                        <div class="bg-white p-2 rounded-circle mb-4 shadow-sm">
+                            <img src="{{ url_for('static', filename='images/logo.jpg') }}" class="rounded-circle"
+                                style="width: 120px; height: 120px; object-fit: cover;">
+                        </div>
+                        <h2 class="fw-bold mb-3">{{ t.staff_login }}</h2>
+                        <p class="opacity-75 small px-3">{{ t.staff_desc }}</p>
+                        <div
+                            class="mt-5 badge bg-white bg-opacity-10 py-2 px-4 rounded-pill border border-white border-opacity-25 small">
+                            {{ t.app_title }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auth Form Section -->
+                <div class="col-md-7 p-4 p-lg-5 bg-white">
+                    <div class="mb-5 text-center text-md-{{ t.align }}">
+                        <h2 class="fw-bold" style="color: var(--roasted);">{{ t.login }}</h2>
+                        <p class="text-muted small">{{ t.staff_desc }}</p>
+                    </div>
+
+                    <form method="POST">
+                        <!-- Role Picker -->
+                        <div class="btn-group w-100 mb-4 shadow-sm rounded-pill overflow-hidden border" role="group">
+                            <input type="radio" class="btn-check" name="role" id="roleAdmin" value="Admin" checked
+                                onclick="toggleAuth(true)">
+                            <label class="btn btn-outline-dark border-0 py-3 fw-bold small"
+                                for="roleAdmin">ADMIN</label>
+
+                            <input type="radio" class="btn-check" name="role" id="roleRM" value="RoastManager"
+                                onclick="toggleAuth(false)">
+                            <label class="btn btn-outline-dark border-0 py-3 fw-bold small" for="roleRM">ROAST
+                                MASTER</label>
+                        </div>
+
+                        <!-- User Inputs -->
+                        <div class="form-floating mb-3">
+                            <input type="text" name="username" class="form-control border-0 bg-light rounded-4 px-4"
+                                id="uIn" placeholder="Name" required>
+                            <label for="uIn" class="{% if session.lang == 'ar' %}pe-4{% else %}ps-4{% endif %}">{{
+                                t.username }}</label>
+                        </div>
+
+                        <!-- Admin Field Hidden -->
+                        <div id="adminKeyGroup" class="animate-quick scale-in" style="display: none !important;">
+                            <div class="form-floating mb-3">
+                                <input type="password" name="secret_key"
+                                    class="form-control border-warning bg-warning bg-opacity-10 rounded-4 px-4 shadow-sm"
+                                    id="kIn" placeholder="Key" value="SHIBAM-KEY">
+                                <label for="kIn"
+                                    class="{% if session.lang == 'ar' %}pe-4{% else %}ps-4{% endif %} text-dark fw-bold">{{
+                                    t.admin_key }}</label>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="password" name="password" class="form-control border-0 bg-light rounded-4 px-4"
+                                id="pIn" placeholder="Pass" required>
+                            <label for="pIn" class="{% if session.lang == 'ar' %}pe-4{% else %}ps-4{% endif %}">{{
+                                t.password }}</label>
+                        </div>
+
+                        <button type="submit"
+                            class="btn btn-coffee w-100 py-3 rounded-pill shadow-lg fs-5 fw-bold mb-4">{{ t.auth_login
+                            }}</button>
+
+                        <div class="text-center">
+                            <a href="{{ url_for('welcome') }}" class="text-decoration-none text-muted small fw-bold">←
+                                {{ t.back }}</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleAuth(isAdmin) {
+        document.getElementById('adminKeyGroup').style.display = isAdmin ? 'block' : 'none';
+    }
+    window.onload = () => toggleAuth(true);
+</script>
+<style>
+    .staff-gradient-auth {
+        background: linear-gradient(180deg, var(--espresso) 0%, var(--roasted) 100%);
+    }
+
+    .animate-quick {
+        animation: scaleIn 0.3s ease-out;
+    }
+
+    @keyframes scaleIn {
+        from {
+            transform: scale(0.95);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+</style>
+{% endblock %}
