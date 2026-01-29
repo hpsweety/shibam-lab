@@ -8,25 +8,33 @@ import re
 import shutil
 
 app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SECRET_KEY'] = 'shibam-secret-key-123'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///D:/TT/shibam_db.sqlite'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'shibam_db.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 ADMIN_SECRET_KEY = "SHIBAM-KEY"
 
 def backup_db():
     try:
-        source = 'D:/TT/shibam_db.sqlite'
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        source = os.path.join(basedir, 'shibam_db.sqlite')
+        backups_dir = os.path.join(basedir, 'backups')
+        
         if os.path.exists(source):
             timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M")
-            dest = f'D:/TT/backups/backup-{timestamp}.sqlite'
-            os.makedirs('D:/TT/backups', exist_ok=True)
+            dest = os.path.join(backups_dir, f'backup-{timestamp}.sqlite')
+            os.makedirs(backups_dir, exist_ok=True)
             shutil.copy2(source, dest)
             # Keep only last 5 backups
-            backups = sorted([os.path.join('D:/TT/backups', f) for f in os.listdir('D:/TT/backups')])
-            if len(backups) > 5:
-                for old_b in backups[:-5]:
-                    os.remove(old_b)
+            if os.path.exists(backups_dir):
+                backups = sorted([os.path.join(backups_dir, f) for f in os.listdir(backups_dir)])
+                if len(backups) > 5:
+                    for old_b in backups[:-5]:
+                        try:
+                            os.remove(old_b)
+                        except:
+                            pass
     except Exception as e:
         print(f"Backup failed: {e}")
 
