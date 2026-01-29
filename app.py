@@ -74,7 +74,7 @@ def get_translations(lang):
             'lang_toggle': 'العربية', 'enter_lab': 'Enter Lab', 'staff_login': 'Staff Login',
             'cupper_role': 'Sensory Cupper', 'staff_role': 'Scientific Staff',
             'cupper_desc': '',
-            'staff_desc': 'Secured portal for Administrators and Managers.',
+            'staff_desc': '',
             'back': 'Back', 'auth_login': 'Auth Login',
             'manage_users': 'Manage Users', 'add_user': 'Add User'
         }
@@ -96,7 +96,7 @@ def get_translations(lang):
             'lang_toggle': 'English', 'enter_lab': 'دخول المختبر', 'staff_login': 'دخول الموظفين',
             'cupper_role': 'متذوق حسي معتمد', 'staff_role': 'الطاقم العلمي والإداري',
             'cupper_desc': '',
-            'staff_desc': 'بوابة مؤمنة للمسؤولين ومدراء جودة التحميص.',
+            'staff_desc': '',
             'back': 'رجوع', 'auth_login': 'تحقق ودخول',
             'manage_users': 'إدارة المستخدمين', 'add_user': 'إضافة حساب جديد'
         }
@@ -536,8 +536,13 @@ def init_data():
             db.session.commit()
             print("INFO: Initial admin user created.")
 
-if __name__ == '__main__':
+# Ensure DB and Admin exist on first run (works for both Local and Render)
+try:
     init_data()
+except Exception as e:
+    print(f"Error initializing data: {e}")
+
+if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     # In production, host must be 0.0.0.0
     app.run(host='0.0.0.0', port=port)
